@@ -4,7 +4,7 @@ using Confluent.Kafka;
 
 namespace Kafka.Example;
 
-public class JsonSerializer<TMessage> : ISerializer<TMessage>
+public class MessageSerializer<TMessage> : ISerializer<TMessage>
 {
     public byte[] Serialize(TMessage data, SerializationContext context)
     {
