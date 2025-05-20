@@ -1,5 +1,6 @@
-﻿using Kafka.Example.Messaging.Abstractions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Kafka.Example.Entities;
+using Kafka.Example.Messaging.Abstractions;
 
 namespace Kafka.Example.Controllers;
 
@@ -7,36 +8,36 @@ namespace Kafka.Example.Controllers;
 [Route("api/example")]
 public class WeatherController : ControllerBase
 {
-    private readonly IWeatherProducer _producer;
+	private readonly IWeatherProducer _producer;
 
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-    
-    public WeatherController(IWeatherProducer producer)
-    {
-        _producer = producer;
-    }
+	private static readonly string[] Summaries = new[]
+	{
+		"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+	};
 
-    [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    index,
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    Summaries[Random.Shared.Next(Summaries.Length)]
-                ))
-            .ToArray();
+	public WeatherController(IWeatherProducer producer)
+	{
+		_producer = producer;
+	}
 
-        foreach (var weatherForecast in forecast)
-        {
-            _producer.Publish(weatherForecast);
-        }
-        
-        return forecast;
-    }
+	[HttpGet]
+	public IEnumerable<WeatherForecast> Get()
+	{
+		var forecast = Enumerable.Range(1, 5).Select(index =>
+				new WeatherForecast
+				(
+					index,
+					DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+					Random.Shared.Next(-20, 55),
+					Summaries[Random.Shared.Next(Summaries.Length)]
+				))
+			.ToArray();
+
+		foreach (var weatherForecast in forecast)
+		{
+			_producer.Publish(weatherForecast);
+		}
+
+		return forecast;
+	}
 }
