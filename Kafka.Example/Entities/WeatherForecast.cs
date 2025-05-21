@@ -8,11 +8,11 @@ public class WeatherForecast(int Id, DateOnly Date, int TemperatureC, string? Su
 	public int TemperatureC { get; init; } = TemperatureC;
 	public string? Summary { get; init; } = Summary;
 
-	public void Deconstruct(int id, out DateOnly Date, out int TemperatureC, out string? Summary)
+	public void Deconstruct(int id, out DateOnly date, out int temperatureC, out string? summary)
 	{
 		Id = id;
-		Date = this.Date;
-		TemperatureC = this.TemperatureC;
-		Summary = this.Summary;
+		date = this.Date;
+		temperatureC = this.TemperatureC;
+		summary = this.Summary;
 	}
 }
