@@ -24,6 +24,7 @@ public class ConsumeHostedService : BackgroundService
 		{
 			var message = _consumer.Consume(stoppingToken);
 			_logger.LogInformation("MessageId = {Id}, Value = {Summary}", message.Message.Key, message.Message.Value.Summary);
+			_consumer.Commit();
 		}
 		_consumer.Unsubscribe();
 	}

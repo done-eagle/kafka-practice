@@ -2,6 +2,8 @@ using Confluent.Kafka;
 using Kafka.Example.Messaging.Abstractions;
 using Kafka.Example.Messaging.Implementations;
 using Kafka.Example;
+using Kafka.Example.Entities;
+using Kafka.Example.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,20 +15,20 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IWeatherProducer, WeatherProducer>();
 
 // TODO Добавить обертку для инициализации Producer 
-builder.Services.AddSingleton<IProducer<int, Kafka.Example.Entities.WeatherForecast>>(producer =>
+builder.Services.AddSingleton<IProducer<int, WeatherForecast>>(producer =>
 {
     var config = new ProducerConfig
     {
         // адреса брокеров
         BootstrapServers = "localhost:29092"
     };
-    var builder = new ProducerBuilder<int, Kafka.Example.Entities.WeatherForecast>(config);
-    builder.SetValueSerializer(new MessageSerializer<Kafka.Example.Entities.WeatherForecast>());
+    var builder = new ProducerBuilder<int, WeatherForecast>(config);
+    builder.SetValueSerializer(new MessageSerializer<WeatherForecast>());
     
     return builder.Build();
 });
 
-builder.Services.AddSingleton<IConsumer<int, Kafka.Example.Entities.WeatherForecast>>(producer =>
+builder.Services.AddSingleton<IConsumer<int, WeatherForecast>>(producer =>
 {
     var config = new ConsumerConfig
     {
@@ -35,13 +37,13 @@ builder.Services.AddSingleton<IConsumer<int, Kafka.Example.Entities.WeatherForec
         AutoOffsetReset = AutoOffsetReset.Earliest,
         EnableAutoCommit = false
     };
-    var builder = new ConsumerBuilder<int, Kafka.Example.Entities.WeatherForecast>(config);
-    builder.SetValueDeserializer(new MessageSerializer<Kafka.Example.Entities.WeatherForecast>());
+    var builder = new ConsumerBuilder<int, WeatherForecast>(config);
+    builder.SetValueDeserializer(new MessageSerializer<WeatherForecast>());
     
     return builder.Build();
 });
 
-builder.Services.AddHostedService<Kafka.Example.Services.ConsumeHostedService>();
+builder.Services.AddHostedService<ConsumeHostedService>();
 
 var app = builder.Build();
 
